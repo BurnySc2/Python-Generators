@@ -20,6 +20,7 @@ def generator_function():
 
 
 def list_comprehension_function():
+    # Perhaps this function could be improved by only generating an 8th (triangle) and then yielding the other 7/8th of the square by using mirroring techniques like in the generator
     my_List = [(x ** 2 + y ** 2, x, y) for x in range(-limit, limit + 1) for y in range(-limit, limit + 1)]
     my_List.sort()
 

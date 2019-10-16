@@ -1,6 +1,9 @@
 import time
+import math
+import cmath
 from typing import Generator, Tuple, Set
 import heapq
+
 
 def generate_tuple(limit: int) -> Generator[Tuple[int, int, int], None, None]:
     """
@@ -17,10 +20,11 @@ def generate_tuple(limit: int) -> Generator[Tuple[int, int, int], None, None]:
     sorted_list = [(0, 0, 0)]
     x_value = 1
     x_value_squared = 1
+
     def order_next_batch():
         nonlocal sorted_list, x_value, x_value_squared
         for y in range(x_value + 1):
-            heapq.heappush(sorted_list, (x_value**2 + y**2, x_value, y))
+            heapq.heappush(sorted_list, (x_value ** 2 + y ** 2, x_value, y))
         x_value += 1
         x_value_squared = x_value ** 2
 
@@ -32,8 +36,11 @@ def generate_tuple(limit: int) -> Generator[Tuple[int, int, int], None, None]:
             order_next_batch()
             next_value = heapq.heappushpop(sorted_list, next_value)
         dist, x_val, y_val = next_value
+
+        # Exit generator once limit is reached
         if max(abs(x_val), abs(y_val)) > limit:
             return None
+
         yield next_value
         # Continue for x == 0 and y == 0, only yield one value
         if not x_val:
@@ -54,4 +61,42 @@ def generate_tuple(limit: int) -> Generator[Tuple[int, int, int], None, None]:
         # Generate new numbers if list is empty
         if not sorted_list:
             order_next_batch()
+
+
+def generate_line(x0: int, y0: int, x1: int, y1: int) -> Generator[Tuple[int, int], None, None]:
+    """ Generates a 2-dimensional line from point1 towards point2. """
+    x_diff = abs(x1 - x0)
+    y_diff = abs(y1 - y0)
+
+    if y_diff <= x_diff:
+
+        m = (y1 - y0) / abs(x1 - x0)
+        new_y = y0
+        # Point2 lies mostly to the right of Point1
+        if x1 > x0:
+            for x in range(x0, x1 + 1):
+                yield (x, math.floor(new_y))
+                new_y += m
+
+        # Point2 lies mostly to the left of Point1
+        else:
+            for x in range(x0, x1 - 1, -1):
+                yield (x, math.floor(new_y))
+                new_y += m
+    else:
+        m = (x1 - x0) / abs(y1 - y0)
+        new_x = x0
+        # Point2 lies mostly to the top of Point1
+        if y1 > y0:
+            for y in range(y0, y1 + 1):
+                yield (math.floor(new_x), y)
+                new_x += m
+
+        # Point2 lies mostly to the bottom of Point1
+        else:
+            for y in range(y0, y1 - 1, -1):
+                yield (math.floor(new_x), y)
+                new_x += m
+    return None
+
 
