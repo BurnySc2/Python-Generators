@@ -6,7 +6,7 @@ import math
 
 from hypothesis import given, settings, strategies as st
 
-from generators_2d.generators import generate_line
+from generators_2d.generators import generate_2d_line
 
 
 @given(
@@ -24,7 +24,7 @@ def test_lines_towards_east(x0, y0, east, north):
         correct_result.append((x, math.floor(y_new)))
         y_new += m
 
-    function_result = list(generate_line(x0, y0, x1, y1))
+    function_result = list(generate_2d_line(x0, y0, x1, y1))
 
     assert correct_result == function_result
 
@@ -44,7 +44,7 @@ def test_lines_towards_west(x0, y0, east, north):
         correct_result.append((x, math.floor(y_new)))
         y_new += m
 
-    function_result = list(generate_line(x0, y0, x1, y1))
+    function_result = list(generate_2d_line(x0, y0, x1, y1))
 
     assert correct_result == function_result
 
@@ -64,7 +64,7 @@ def test_lines_towards_north(x0, y0, east, north):
         correct_result.append((math.floor(x_new), y))
         x_new += m
 
-    function_result = list(generate_line(x0, y0, x1, y1))
+    function_result = list(generate_2d_line(x0, y0, x1, y1))
 
     assert correct_result == function_result
 
@@ -84,49 +84,49 @@ def test_lines_towards_south(x0, y0, east, north):
         correct_result.append((math.floor(x_new), y))
         x_new += m
 
-    function_result = list(generate_line(x0, y0, x1, y1))
+    function_result = list(generate_2d_line(x0, y0, x1, y1))
 
     assert correct_result == function_result
 
 
 def test_simple_line_examples():
     # No line, start and end point are identical, dont divide by zero
-    a = list(generate_line(0, 0, 0, 0))
+    a = list(generate_2d_line(0, 0, 0, 0))
     assert a == [(0, 0)]
     # 2 examples to check vertical and horizontal
 
-    a = list(generate_line(0, 0, 1, 0))
+    a = list(generate_2d_line(0, 0, 1, 0))
     assert a == [(0, 0), (1, 0)]
 
-    a = list(generate_line(0, 0, 0, 1))
+    a = list(generate_2d_line(0, 0, 0, 1))
     assert a == [(0, 0), (0, 1)]
 
     # 3 examples to check diagonal
-    a = list(generate_line(0, 0, 1, 1))
+    a = list(generate_2d_line(0, 0, 1, 1))
     assert a == [(0, 0), (1, 1)]
 
-    a = list(generate_line(-1, -1, 1, 1))
+    a = list(generate_2d_line(-1, -1, 1, 1))
     assert a == [(-1, -1), (0, 0), (1, 1)]
 
-    a = list(generate_line(-1, 1, 1, -1))
+    a = list(generate_2d_line(-1, 1, 1, -1))
     assert a == [(-1, 1), (0, 0), (1, -1)]
 
     # Point2 is mostly to the right of point1
-    a = list(generate_line(0, 0, 4, 2))
+    a = list(generate_2d_line(0, 0, 4, 2))
     b = [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2)]
     assert a == b, f"{a}\n{b}"
 
     # Point2 is mostly to the left of point1
-    a = list(generate_line(4, 2, 0, 0))
+    a = list(generate_2d_line(4, 2, 0, 0))
     b = [(4, 2), (3, 1), (2, 1), (1, 0), (0, 0)]
     assert a == b, f"{a}\n{b}"
 
     # Point2 is mostly to the top of point1
-    a = list(generate_line(0, 0, 2, 4))
+    a = list(generate_2d_line(0, 0, 2, 4))
     b = [(0, 0), (0, 1), (1, 2), (1, 3), (2, 4)]
     assert a == b, f"{a}\n{b}"
 
     # Point2 is mostly to the bottom of point1
-    a = list(generate_line(2, 4, 0, 0))
+    a = list(generate_2d_line(2, 4, 0, 0))
     b = [(2, 4), (1, 3), (1, 2), (0, 1), (0, 0)]
     assert a == b, f"{a}\n{b}"

@@ -6,7 +6,7 @@ from typing import Generator, Tuple, Set
 import heapq
 
 
-def generate_2d_offset_points(limit: int) -> Generator[Tuple[int, int, int], None, None]:
+def generate_2d_ordered_grid_points(limit: int) -> Generator[Tuple[int, int, int], None, None]:
     """
     Imagine having a 2 dimensional grid of points, e.g.
     [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), ...]
@@ -66,7 +66,7 @@ def generate_2d_offset_points(limit: int) -> Generator[Tuple[int, int, int], Non
             order_next_batch()
 
 
-def generate_grid(
+def generate_2d_grid_points(
     min_distance: int = 0, max_distance: int = 1, step_size: int = 1
 ) -> Generator[Tuple[int, int], None, None]:
     """
@@ -77,10 +77,8 @@ def generate_grid(
     generate_grid(max_Distance=1) returns a generator with values
     [(0, 0), (-1, 1), (-1, -1), (0, 1), (0, -1), (1, 1), (1, -1), (1, 0), (-1, 0)]
 
-    :param min_distance:
-    :param max_distance:
-    :param step_size:
-    :return:
+    Returnvalues:
+    (x: int, y: int)
     """
     if min_distance == 0:
         yield 0, 0
@@ -100,7 +98,7 @@ def generate_grid(
     return None
 
 
-def generate_line(
+def generate_2d_line(
     x0: int, y0: int, x1: int, y1: int, exclude_start: bool = False, exclude_end: bool = False
 ) -> Generator[Tuple[int, int], None, None]:
     """
@@ -153,7 +151,7 @@ def generate_line(
     return None
 
 
-def generate_circle_points(
+def generate_2d_circle_points(
     point_radius: float = 1.0, circle_radius: float = 1.0
 ) -> Generator[Tuple[float, float, float, float], None, None]:
     """
@@ -228,7 +226,7 @@ if __name__ == "__main__":
         ax.axhline(y=0, color="k")
         ax.axvline(x=0, color="k")
 
-        for dist, x, y in generate_2d_offset_points(limit):
+        for dist, x, y in generate_2d_ordered_grid_points(limit):
             point_positions.append((dist, x, y))
 
         colors = list(_get_colors_hex(len(point_positions)))
@@ -264,7 +262,7 @@ if __name__ == "__main__":
         ax.axhline(y=0, color="k")
         ax.axvline(x=0, color="k")
 
-        for x, y in generate_line(*start, *end):
+        for x, y in generate_2d_line(*start, *end):
             point_positions.append((x, y))
 
         for (x, y), color in zip(point_positions, _get_colors_hex(len(point_positions))):
@@ -315,7 +313,7 @@ if __name__ == "__main__":
                     if circle_radius < limit - point_radius * 2:
                         continue
 
-                for amount, angle, x, y in generate_circle_points(
+                for amount, angle, x, y in generate_2d_circle_points(
                     point_radius=point_radius, circle_radius=circle_radius
                 ):
                     circle_positions.append((x, y))
