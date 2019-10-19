@@ -90,6 +90,27 @@ def test_lines_towards_south(x0, y0, east, north):
 
 
 def test_simple_line_examples():
+    # No line, start and end point are identical, dont divide by zero
+    a = list(generate_line(0, 0, 0, 0))
+    assert a == [(0, 0)]
+    # 2 examples to check vertical and horizontal
+
+    a = list(generate_line(0, 0, 1, 0))
+    assert a == [(0, 0), (1, 0)]
+
+    a = list(generate_line(0, 0, 0, 1))
+    assert a == [(0, 0), (0, 1)]
+
+    # 3 examples to check diagonal
+    a = list(generate_line(0, 0, 1, 1))
+    assert a == [(0, 0), (1, 1)]
+
+    a = list(generate_line(-1, -1, 1, 1))
+    assert a == [(-1, -1), (0, 0), (1, 1)]
+
+    a = list(generate_line(-1, 1, 1, -1))
+    assert a == [(-1, 1), (0, 0), (1, -1)]
+
     # Point2 is mostly to the right of point1
     a = list(generate_line(0, 0, 4, 2))
     b = [(0, 0), (1, 0), (2, 1), (3, 1), (4, 2)]
