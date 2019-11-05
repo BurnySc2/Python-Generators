@@ -2,7 +2,7 @@ import time
 import math
 import cmath
 import itertools
-from typing import Generator, Tuple, Set
+from typing import Generator, Tuple, Set, List
 import heapq
 
 
@@ -206,6 +206,50 @@ def _get_colors_hex(amount: int = 1) -> Generator[Tuple[int, int, int], None, No
     return None
 
 
+# TODO: write tests
+def indices_generator(start_list: List[int], end_list: List[int]) -> Generator[List[int], None, None]:
+    """
+    Loop from the start_list to the end_list by only incrementing the last value by 1.
+
+    Example::
+
+        indices_generator([0, 1, 0], [2, 3, 2])
+        # Returns:
+        [0, 1, 0]
+        [0, 1, 1]
+        [0, 1, 2]
+        [0, 2, 0]
+        [0, 2, 1]
+        [0, 2, 2]
+        [0, 3, 0]
+        [0, 3, 1]
+        [0, 3, 2]
+        [1, 1, 0] Min index for list[1] is 1
+        [1, 1, 1]
+        ...
+        [2, 3, 2] The last returned list
+    """
+    copy = start_list.copy()
+    yield copy
+    last_index = len(copy) - 1
+
+    def increment_by_one_at_index(my_list: List[int], start_list: List[int], end_list: List[int], index: int):
+        """ Returns True if incremented successfully, False if end was reached """
+        if index < 0:
+            return False
+        my_list[index] += 1
+        if my_list[index] > end_list[index]:
+            my_list[index] = start_list[index]
+            return increment_by_one_at_index(my_list, start_list, end_list, index - 1)
+        return True
+
+    while 1:
+        incremented = increment_by_one_at_index(copy, start_list, end_list, last_index)
+        if not incremented:
+            return
+        yield copy
+
+
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
@@ -348,9 +392,21 @@ if __name__ == "__main__":
             if circles_added:
                 fig.savefig(f"plot_circles-{point_radius:02}-{limit:02}.png", dpi=100)
 
-    t0 = time.perf_counter()
-    plot_squares(limit=5)
-    plot_line(start=(0, 0), end=(40, 30))
-    plot_circles(fill_circle=True)
-    t1 = time.perf_counter()
-    print(t1 - t0)
+    # t0 = time.perf_counter()
+    # plot_squares(limit=5)
+    # plot_line(start=(0, 0), end=(40, 30))
+    # plot_circles(fill_circle=True)
+    # t1 = time.perf_counter()
+    # print(t1 - t0)
+
+    def test_indices_generator():
+        for index in indices_generator([0, 1, 0], [2, 3, 2]):
+            print(index)
+
+    # test_indices_generator()
+
+    import cmath, random
+
+    c = cmath.rect(random.uniform(0, 5), random.uniform(0, 1) * 2 * math.pi)
+    x, y = c.real, c.imag
+    print(x, y)
